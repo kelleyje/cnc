@@ -11,8 +11,9 @@ from .exceptions import PlaybackDeviceException
 MHZ = 1000 * 1000
 DO_ECHO = False
 
+
 class FPGAPlaybackDevice:
-    #STOP_SUPPORT = True
+    # STOP_SUPPORT = True
     MAX_LENGTH = 2**16
 
     def __init__(self, port=None):
@@ -20,8 +21,11 @@ class FPGAPlaybackDevice:
             # Auto-select port
             for comport in list(serial.tools.list_ports.comports()):
                 if "FTDI" in comport[2]:
-                    #Assumption: this is the only FTDI device
+                    # Assumption: this is the only FTDI device
                     port = comport[0]
+                print(comport[0], ",", comport[1], ",", comport[2])
+        print("Port: ", port)
+        port = "COM4"
 
             # TODO: Some kind of handshake here to verify the device is actually *our* device would be good.
 
@@ -77,7 +81,7 @@ class FPGAPlaybackDevice:
             else:
                 single_signals.append(signal)
 
-        #if self.STOP_SUPPORT:
+        # if self.STOP_SUPPORT:
         #    short_ch, short_dur, short_count = min(((i, s.sample_count / s.sample_rate, s.sample_count) for i, s in enumerate(signals) if not s.repeat), key=lambda a: a[1])
         #    self.send_command('set_stop_addr {} {:X}\n'.format(short_ch, short_count))
 
@@ -94,8 +98,8 @@ class FPGAPlaybackDevice:
         self.loaded_signal_mask = ch_mask
 
         # Write samples
-        #print('Writing length {}'.format(count))
-        #print('Samples:', end='')
+        # print('Writing length {}'.format(count))
+        # print('Samples:', end='')
 
         sent_count = 0
         gens = [s.samples(length=count) if s is not None else repeat(0) for s in signals]
@@ -104,7 +108,7 @@ class FPGAPlaybackDevice:
             for i, val in enumerate(vals):
                 din = din | (val << i)
 
-            #print(din, end='')
+            # print(din, end='')
 
             self.ser.write(bytes([din]))
             sent_count += 1

@@ -23,6 +23,7 @@ class MyBehaviorModel:
 ModelClass = MyBehaviorModel
 '''
 
+
 class BehaviorModel:
     relevant_inputs = [
         'Input 1',

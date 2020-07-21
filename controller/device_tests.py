@@ -240,7 +240,7 @@ class ClockRateTest(DeviceTest):
         freq_min = self.parameter_values[0]
         freq_max = self.parameter_values[1]
 
-        #Input integrity validation
+        # Input integrity validation
         if freq_min < 0:
             print("Invalid minimum frequency value.")
             return
@@ -266,9 +266,9 @@ class ClockRateTest(DeviceTest):
         maxBounds = [-1, -1]
         print("Checking the overall frequency range of [{},{}]".format(freq_min,freq_max))
 
-        #Consider preliminary check for freq_min/freq_max
+        # Consider preliminary check for freq_min/freq_max
 
-        #Check if middle is valid, otherwise find an valid start freq
+        # Check if middle is valid, otherwise find an valid start freq
         clock.signal = signal.Clock(freq, duty_cycle=clock.signal.duty_cycle)
         self.send_inputs(inputs, outputs)
         if self.behavior_model.validate(inputs, outputs):
@@ -295,7 +295,7 @@ class ClockRateTest(DeviceTest):
                             maxBounds = [freq, freq_max]
                             print("Found starting frequency value of {}".format(freq))
                             
-                            found = True    #Need to break 2 loops
+                            found = True    # Need to break 2 loops
                             break
                 iters *= 2
         
@@ -339,6 +339,7 @@ class ClockRateTest(DeviceTest):
 #   model. The configurable inputs are the range of of input duty cycles and the
 #   number of iterations the test will run.
 
+
 class DutyCycleTest(DeviceTest):
     test_name = 'Duty Cycle Test'
 
@@ -356,7 +357,7 @@ class DutyCycleTest(DeviceTest):
         duty_min = self.parameter_values[0]
         duty_max = self.parameter_values[1]
 
-        #Input integrity validation    
+        # Input integrity validation
         if duty_min < 0:
             print("Invalid minimum duty cycle value.")
             return
@@ -383,7 +384,7 @@ class DutyCycleTest(DeviceTest):
         minBounds = [-1, -1]
         maxBounds = [-1, -1]
 
-        #Check if middle is valid, otherwise find an valid start duty cycle
+        # Check if middle is valid, otherwise find an valid start duty cycle
         clock.signal = signal.Clock(clock.signal.clock_rate, duty_cycle=duty, sample_rate=clock.signal.sample_rate)
         self.send_inputs(inputs, outputs)
         if self.behavior_model.validate(inputs, outputs):
@@ -463,7 +464,6 @@ class MaxDriftTest(DeviceTest):
         if(neg_delay_max < 0):
             print("Invalid negative delay, please enter a positive number in seconds")
 
-
         # Parameter Validation Check
         og_signals = [self.relevant_input_values[0].signal.clone(), self.relevant_input_values[1].signal.clone()]
 
@@ -472,7 +472,6 @@ class MaxDriftTest(DeviceTest):
             print("Unable to validate signals before attempting to drift")
             return
 
-        
         pos_bounds = [0, pos_delay_max]
         neg_bounds = [0, neg_delay_max]
 
@@ -513,6 +512,7 @@ class MaxDriftTest(DeviceTest):
 
         # TODO: return result dict (see ButtonPulseWidthTest... used in TestEnviornment.run for multi-iteration runs)
 
+
 class MaxGlitchDuration(DeviceTest):
     test_name = 'Max Glitch Duration'
 
@@ -525,7 +525,7 @@ class MaxGlitchDuration(DeviceTest):
         TestIOMapping('Clock')
     ]
 
-    def run(self, inputs, outputs, glitch_loc=50,numRuns=10, scaled=False):
+    def run(self, inputs, outputs, glitch_loc=50, numRuns=10, scaled=False):
         clock = self.relevant_input_values[0]
         reset = self.relevant_input_values[1]
 
@@ -562,7 +562,7 @@ class MaxGlitchDuration(DeviceTest):
             # Step 1: Expand towards rising edge
 
             # Rebuild the clock without glitches
-            clock.signal = signal.Clock(clock_rate=clock.signal.clock_rate,duration=clock.signal.duration)
+            clock.signal = signal.Clock(clock_rate=clock.signal.clock_rate, duration=clock.signal.duration)
 
             glitch_size_1 = (lowBound[0] + lowBound[1])/2.0 
             #TODO: GENERATE SIGNAL THAT IS LOW FROM (glitchloc - glitch_size_1, glitch_loc) MAYBE SCALE DOWN BY 0.5 TO ACCOUNT FOR PERIOD
@@ -572,11 +572,10 @@ class MaxGlitchDuration(DeviceTest):
             else:
                 lowBound[1] = glitch_size_1
 
-    
             # Step 2: Expand towards negative edge
 
             # Rebuild the clock without glitches
-            clock.signal = signal.Clock(clock_rate=clock.signal.clock_rate,duration=clock.signal.duration)
+            clock.signal = signal.Clock(clock_rate=clock.signal.clock_rate, duration=clock.signal.duration)
             glitch_size_2 = (highBound[0] + highBound[1])/2.0
             #TODO: GENERATE SIGNAL THAT IS LOW FROM (glitchloc, glitch_loc + glitch_size_2)
             self.send_inputs(inputs, outputs)
@@ -588,7 +587,7 @@ class MaxGlitchDuration(DeviceTest):
             # Step 3: Expand outward in both directions
 
             # Rebuild the clock without glitches
-            clock.signal = signal.Clock(clock_rate=clock.signal.clock_rate,duration=clock.signal.duration)
+            clock.signal = signal.Clock(clock_rate=clock.signal.clock_rate, duration=clock.signal.duration)
             glitch_size_3 = (spreadBound[0] + spreadBound[1])/2.0
             print("Checking LOW value of -{} Checking HIGH value of {} Checking SPREAD value of +/-{}".format(glitch_size_1,glitch_size_2,glitch_size_3))
             #TODO: GENERATE SIGNAL THAT IS LOW FROM (glitchloc - glitch_size_3, glitch_loc + glitch_size_3)
@@ -609,6 +608,7 @@ class MaxGlitchDuration(DeviceTest):
             print("A glitch spreading equally in both directions extended [{},{}] for a maximum of {} seconds [found to not exceed {} seconds]".format((glitch_loc-spreadBound[0])*scale,(glitch_loc+spreadBound[0])*scale,(2*spreadBound[0])*scale,(2*spreadBound[1])*scale))
 
         # TODO: return result dict (see ButtonPulseWidthTest... used in TestEnviornment.run for multi-iteration runs)
+
 
 class MaxNumGlitchTest(DeviceTest):
     test_name = 'Max Num Glitch Test'
@@ -653,6 +653,7 @@ class MaxNumGlitchTest(DeviceTest):
 
         # TODO: return result dict (see ButtonPulseWidthTest... used in TestEnviornment.run for multi-iteration runs)
 
+
 class ButtonPulseWidthTest(DeviceTest):
     test_name = 'Button Pulse Width'
 
@@ -663,7 +664,8 @@ class ButtonPulseWidthTest(DeviceTest):
 
     relevant_inputs = [
         TestIOMapping('Reset'),
-        TestIOMapping('Button')
+        TestIOMapping('Button'),
+        TestIOMapping('Clock')
     ]
 
     def run(self, inputs, outputs, precision=10e-6, duration=0.30, setup_time=0.06):  # old prevision = 40e-9
@@ -671,8 +673,9 @@ class ButtonPulseWidthTest(DeviceTest):
         pulses = []
     
         #number of iterations
-        iters = 70
-        #iters = 30
+        # iters = 70
+        # iters = 30
+        iters = 2
         for i in range(iters):
             pulse_min = self.parameter_values[0]
             pulse_max = self.parameter_values[1]
@@ -682,12 +685,13 @@ class ButtonPulseWidthTest(DeviceTest):
             # Initialization
             reset = self.relevant_input_values[0]
             button = self.relevant_input_values[1]
+            clock = self.relevant_input_values[2]
             val = (pulse_min + pulse_max) / 2
             search_size = val
             found_end = False
 
             pulse_bad_max = pulse_min  # Biggest value that didn't work
-            pulse_good_min = pulse_max # Smallest vlaue that worked
+            pulse_good_min = pulse_max # Smallest value that worked
             err_bad = 0
             err_good = 0
 
@@ -722,6 +726,7 @@ class ButtonPulseWidthTest(DeviceTest):
                 print('Sample count used for pulse:', pulse_sample_count)
                 print('Sample rate:', round(sr))
 
+                clock.signal = signal.Clock(8000000, duty_cycle=clock.signal.duty_cycle, sample_rate=16000000)
                 button.signal = signal.Pulse(signal.LOW, setup_time, val, duration - setup_time - val, sample_rate=sr)
                 self.send_inputs(inputs, outputs)
 
@@ -754,6 +759,7 @@ class ButtonPulseWidthTest(DeviceTest):
             'invalid_pulse_max': pulse_bad_max,
             'valid_pulse_min': pulse_good_min
         }
+
 
 class SingleInstructionGlitch(DeviceTest):
     test_name = 'Single Instruction Glitch'
@@ -872,6 +878,7 @@ class SerialTest(DeviceTest):
             self.send_inputs(inputs, outputs)
             self.environment.plot(['outputs'])
 
+
 class PICSingleInstructionGlitch(DeviceTest):
     test_name = 'PIC Single Instruction Glitch'
 
@@ -882,6 +889,7 @@ class PICSingleInstructionGlitch(DeviceTest):
     relevant_inputs = [
         TestIOMapping('Reset'),
         TestIOMapping('Button'),
+        TestIOMapping('Temp'),
         TestIOMapping('Clock')
     ]
 
@@ -889,7 +897,108 @@ class PICSingleInstructionGlitch(DeviceTest):
     ]
 
     def run(self, inputs, outputs):
-        #Reminder: these are the zybo pins
+
+        # Constants
+        HIGH = 1
+        LOW = 0
+
+        duration = 2  # Signal duration, from 0 to value inclusively
+        clock_rate = 100
+
+        reset = self.relevant_input_values[0]
+        button = self.relevant_input_values[1]
+        temp = self.relevant_input_values[2]
+        clock = self.relevant_input_values[3]
+
+        # Reset Signal Generation
+        reset.signal = signal.Signal(initial_value=signal.LOW, sample_rate=2 * clock_rate, duration=16 / clock_rate)
+        reset.signal = reset.signal.append(signal.Signal(initial_value=signal.HIGH, sample_rate=2 * clock_rate, duration=(duration - 16 / clock_rate)))
+
+        # Button Signal Generation
+        button_high = 64 / clock_rate  # How long to hold the start button high
+        button_low = 64 / clock_rate  # How long to press the button
+        # button_rest = 32/clock_rate #Leave the button high for the remainder
+        # button_rest = 64 / clock_rate  # Leave the button high for the remainder
+        button_rest = duration - button_high - button_low  # Leave the button high for the remainder
+
+        button.signal = signal.Signal(initial_value=signal.HIGH, sample_rate=2 * clock_rate, duration=button_high)
+        button.signal = button.signal.append(signal.Signal(initial_value=signal.LOW, sample_rate=2 * clock_rate, duration=button_low))
+        button.signal = button.signal.append(signal.Signal(initial_value=signal.HIGH, sample_rate=2 * clock_rate, duration=button_rest))
+
+        # Temp Signal Generation (Filler signal, Zybo Ch. 2/I3 might not work)
+        temp.signal = signal.Signal(initial_value=signal.LOW, sample_rate=2 * clock_rate, duration=duration)
+
+        # Clock Signal Development
+        period = float(1 / clock_rate)  # Clock period, calculated
+        half_period = float(period / 2)  # Clock half-period, calculated, for 50% duty cycle
+
+        level = HIGH  # Defines the starting_level of the signal
+        change_times = []
+
+        time = 0
+
+        while time <= duration:
+            change_times.append(time)
+            time += half_period
+
+        '''
+        # Clock Glitch Insertion
+        glitch_cycles = [2, 2]  # [First cycle glitched, last cycle glitched]
+        glitch_location = 0.75  # Start of glitch into the given cycle, from 0 (start) to 1 (end), like percentage
+        glitch_length = 0.1  # Length of glitch (seconds), continuous over clock edges
+
+        # successive_tries = 10  # TODO: implement into binary search algorithm
+
+        for i in range(glitch_cycles[1] - glitch_cycles[0] + 1):  # Inserts glitch for number of cycles
+            cycle = i + glitch_cycles[0]  # Cycle being glitched
+            start_of_glitch = (cycle - 1 + glitch_location) * period  # Glitch start time
+            end_of_glitch = start_of_glitch + glitch_length  # Glitch end time
+
+            after_change_numbered = 0  # Counter used to determine where to insert glitch in output
+            for k in change_times:  # Finds where to insert glitch start edge
+                if k <= start_of_glitch:
+                    after_change_numbered += 1
+                elif k > start_of_glitch:  # Reduces time in loop
+                    break
+
+            # Inserts the first edge of glitch
+            change_times.insert(after_change_numbered, start_of_glitch)
+
+            # Skip edges within glitches
+            for k in range(after_change_numbered + 1, len(change_times)):
+                if change_times[k] <= end_of_glitch:
+                    after_change_numbered += 1
+                elif change_times[k] > end_of_glitch:
+                    break
+
+            # Inserts the last edge of glitch
+            change_times.insert(after_change_numbered, end_of_glitch)
+        '''
+
+        # Clock Signal Generation
+
+        clock.signal = signal.Signal(initial_value=LOW, sample_rate=8*clock_rate, duration=0)
+
+        for i in range(len(change_times) - 1):
+            clock.signal = clock.signal.append(signal.Signal(initial_value=level, sample_rate=8*clock_rate, duration=(change_times[i+1] - change_times[i])))
+            if level:
+                level = LOW
+            else:
+                level = HIGH
+
+        # self.environment.plot(['inputs'])
+        self.send_inputs(inputs, outputs)
+
+        if not self.behavior_model.validate(inputs, outputs):
+            print("---")
+            print("Behavior model not validated")
+            print("---")
+
+            print("---")
+
+        '''
+        # -----ZJE Version-----
+        # Reminder: these are the zybo pins
         reset = self.relevant_input_values[0]
         button = self.relevant_input_values[1]
         clock = self.relevant_input_values[2]
@@ -899,7 +1008,6 @@ class PICSingleInstructionGlitch(DeviceTest):
 
         reset.signal = signal.Signal(initial_value=signal.LOW, sample_rate=2*clock_rate, duration=16/clock_rate)
         reset.signal = reset.signal.append(signal.Signal(initial_value=signal.HIGH, sample_rate=2*clock_rate, duration=16/clock_rate))
-
 
         button_high = 64/clock_rate #How long to hold the start button high
         button_low = 64/clock_rate   #How long to press the button
@@ -930,7 +1038,7 @@ class PICSingleInstructionGlitch(DeviceTest):
             #for factor in [0.01,0.025,0.05,0.10,0.20]:
                 glitch_size=factor/clock_rate
                 glitch_size=25e-08
-                #glitch_size=5e-06
+                # glitch_size=5e-06
                 print("Trying a glitch of %g at %g "%(glitch_size,glitch_start))
                 for i in range(200):
                     if i % 2 == 0:
@@ -939,7 +1047,7 @@ class PICSingleInstructionGlitch(DeviceTest):
                         signal_value = signal.LOW
 
                     if i == glitch_start or i == glitch_start+1:
-                        #Insert glitch
+                        # Insert glitch
                         duration=glitch_size
                         print("Inserted glitch at time ", i*(0.5/clock_rate))
                     else:
@@ -958,6 +1066,8 @@ class PICSingleInstructionGlitch(DeviceTest):
 
 
                     print("---")
+                    '''
+
 
 
 class ClockGlitchDev(DeviceTest):
@@ -1017,6 +1127,7 @@ class ClockGlitchDev(DeviceTest):
         self.send_inputs(inputs, outputs)
 
         #self.environment.plot(['outputs'])
+
 
 tests = [
     BasicPlayback, 

@@ -15,6 +15,7 @@ class MyBehaviorModel:
         tx = self.relevant_output_values[2].signal
 
         # Use first change in button as starting point
+        print(list(button.changes()))
         t_start, _ = list(button.changes())[1]
 
         print("Button changes: ", list(button.changes()))

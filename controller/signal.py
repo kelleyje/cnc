@@ -18,9 +18,10 @@ if 'Windows' == platform.system():
     from pywinauto.findwindows import find_window
 
 # Constants
-LOW  = 0
+LOW = 0
 HIGH = 1
 MHZ = 1000 * 1000
+
 
 class RecordingSession:
     @staticmethod
@@ -99,6 +100,7 @@ class RecordingSession:
         self.sal.close_all_tabs()
 
         return signals
+
 
 class Signal:
     """A representation of a recorded or constructed signal."""
@@ -755,6 +757,7 @@ class Clock(Signal):
 
         s.repeat = False
         return s
+
 
 def Pulse(pulse_value=HIGH, pre_duration=1, duration=1, post_duration=1, sample_rate=20*MHZ):
     s = Signal(initial_value=1-pulse_value, duration=pre_duration, sample_rate=sample_rate)

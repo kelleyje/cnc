@@ -29,6 +29,7 @@ SETTINGS
 {}
 Behavior Model: {}'''
 
+
 def parse_io_name(name):
     if len(name) == 0:
         return None
@@ -47,6 +48,7 @@ def parse_io_name(name):
 
     return io_type, io_index
 
+
 def input_int(*args):
     while 1:
         val = input(*args)
@@ -54,6 +56,7 @@ def input_int(*args):
             return int(val)
         except ValueError:
             print('Not an integer, try again')
+
 
 class Interface:
     @staticmethod

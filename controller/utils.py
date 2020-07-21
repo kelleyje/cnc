@@ -1,5 +1,6 @@
 import re
 
+
 def get_bits(value, bit_count):
     bits = []
     number = int(value, 16)
@@ -7,9 +8,11 @@ def get_bits(value, bit_count):
         bits.append((number & (1 << i)) >> i)
     return bits
 
+
 def get_bytes_of_uint32(n):
     for i in range(4):
         yield chr((n >> (24-8*i) & 0xFF))
+
 
 def binary_search(min_val, max_val, precision):
     val = (min_val + max_val) / 2
@@ -29,6 +32,7 @@ def binary_search(min_val, max_val, precision):
 
     return val
 
+
 def display_rate(rate, unit='Hz'):
     magnitudes = (('G', 1000 ** 3), ('M', 1000 ** 2), ('k', 1000))
 
@@ -42,6 +46,7 @@ def display_rate(rate, unit='Hz'):
         prefix = ''
 
     return '{} {}{}'.format(value, prefix, unit)
+
 
 def parse_rate(rate):
     match = re.match('(\d+) ?([kMG]?)', rate)
@@ -60,6 +65,7 @@ def parse_rate(rate):
     except (KeyError, ValueError):
         pass
 
+
 def input_rate(*args):
     while True:
         rate = parse_rate(input(*args))
@@ -68,6 +74,7 @@ def input_rate(*args):
             print('Invalid rate')
         else:
             return rate
+
 
 def parse_duration(val):
     units = {'s': 1, 'ms': 1000, 'us': 1000**2}
@@ -85,6 +92,7 @@ def parse_duration(val):
 
     return duration
 
+
 def input_duration(*args):
     while 1:
         userval = input(*args).strip()
@@ -96,6 +104,7 @@ def input_duration(*args):
             print('Invalid duration, try again.')
 
     return duration
+
 
 def parse_percent(val):
     is_fraction = True
@@ -110,6 +119,7 @@ def parse_percent(val):
         val = val / 100
 
     return val
+
 
 def prompt_yesno(*args):
     return input(*args).lower().strip() in ('y', 'yes')
